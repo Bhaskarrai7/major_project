@@ -5,7 +5,11 @@ import {
   USER_REGISTER_SUCCESS,
   USER_REGISTER_FAIL,
   USER_LOGIN_REQUEST,
-  USER_LOGIN_FAIL
+  USER_LOGIN_FAIL,
+  USER_LOGOUT_SUCCESS,
+  USER_PROFILE_REQUEST,
+  USER_PROFILE_SUCCESS,
+  USER_PROFILE_FAIL,
 } from '../crops/actionTypes';
 
 const registerUserAction = (name, email, password) => {
@@ -83,5 +87,45 @@ const loginUserAction = (email,password) => {
     }
   };
 };
+//Logout action
+const logoutUserAction = () => async dispatch => {
+  try {
+    //Remove user from storage
+    localStorage.removeItem('userAuthData');
+    dispatch({
+      type: USER_LOGOUT_SUCCESS,
+    });
+  } catch (error) {}
+};
+
+export const getUserProfile = () => {
+  return async (dispatch, getState) => {
+    const { userInfo } = getState().userLogin;
+    try {
+      dispatch({
+        type: USER_PROFILE_REQUEST,
+      });
+      const config = {
+        headers: {
+          authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.get('/api/users/profile', config);
+      dispatch({
+        type: USER_PROFILE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      dispatch({
+        type: USER_PROFILE_FAIL,
+        payload: error.response && error.response.data.message,
+      });
+    }
+  };
+};
+
+
 export { registerUserAction };
 export { loginUserAction };
+export {logoutUserAction};
+

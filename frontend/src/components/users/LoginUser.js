@@ -1,25 +1,42 @@
-import React,{useState}from 'react';
-import { useDispatch } from 'react-redux';
+import React,{useEffect, useState}from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUserAction } from '../../redux/actions/users/usersAction';
-
-const LoginUser = () => {
+import ErrorMessage from '../ErrorMessage';
+const LoginUser = ({history}) => {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
 
     const dispatch = useDispatch();
+
+    //grab pieces of data from our store
+
+    const state= useSelector(state => {
+      return state.userLogin;
+    });
+
+    const { loading, userInfo,error} = state;
+
     
    //Submit Handler
 
-   const loginUserSubmitHandler = (e) => {
+   const loginUserSubmitHandler = e => {
        e.preventDefault();
        console.log(email,password);
        dispatch(loginUserAction(email,password));
-   };
+ };
+
+  //Redirect
+  useEffect(() => {
+    if(userInfo) history.push('/profile');
+  }, [state]);
+
 
   return (
     <div className='row container-height'>
       <div className='col-lg-6 col-md-6 m-auto'>
         <div className='container'>
+          {loading && <h1>Loading</h1>}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
           <form onSubmit={loginUserSubmitHandler}>
             <fieldset>
               <div className='form-group'>

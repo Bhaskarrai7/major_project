@@ -16,12 +16,12 @@ const userLogin= useSelector(state => state.userLogin)
  const {userInfo} = userLogin;
  //Redirect if user is Login/authenticated
 
-//  useEffect(() => {
-//    if(userInfo){
-//        history.push('/dashboard');
-//    }
+ useEffect(() => {
+   if(userInfo){
+       history.push('/dashboard');
+   }
 
-//  },[userInfo])
+ },[userInfo]); 
 
 
   const formSubmitHandler = e => {

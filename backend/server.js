@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 const error = require('./middlewares/errorMiddlewareHandler');
  const usersRoute = require('./routes/usersRoute');
 const cropRoutes = require('./routes/cropRoutes');
+const logger = require('./config/logger');
+
  
  dotenv.config();
 
@@ -16,6 +18,16 @@ const app = express();
 
 //passing body data
 app.use(express.json());
+
+app.use((req, res, next) => {
+    logger.info(req.body);
+    let oldsend = res.send;
+    res.send = function (data) {
+        logger.info(JSON.parse(data));
+        oldsend.apply(res, arguments);
+    }
+    next();
+})
 
 
  //routes

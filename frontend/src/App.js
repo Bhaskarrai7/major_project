@@ -6,6 +6,9 @@ import Navbar from './components/navbar/Navbar';
 import Crop from './components/crops/Crop';
 import RegisterUser from './components/users/RegisterUser';
 import LoginUser from './components/users/LoginUser';
+import Home from './components/Home/Home';
+// import Profile from './components/Profile/Profile';
+
 
 
 
@@ -15,6 +18,8 @@ function App() {
      <BrowserRouter>
        <Navbar />
        <Switch>
+       {/* <Route exact path = '/profile' component ={Profile} /> */}
+         <Route exact path = '/' component ={Home} />
          <Route exact path = '/login' component ={LoginUser} />
          <Route exact path = '/crop' component ={Crop} />
          <Route exact path = '/addcrop' component ={AddCrop} />

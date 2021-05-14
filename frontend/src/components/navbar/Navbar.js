@@ -1,6 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-const Navbar = () => {
+import { Link,useHistory } from 'react-router-dom';
+import {useSelector ,useDispatch} from 'react-redux';
+import { logoutUserAction } from '../../redux/actions/users/usersAction';
+const Navbar = props => {
+   const state = useSelector(state => state.userLogin);
+
+   const history = useHistory();
+
+   const dispatch = useDispatch();
+
+   const logoutHandler = () => {
+     dispatch(logoutUserAction());
+     history.push('/');
+   };
+
+    const { userInfo, loading, error } = state;
   return (
     <header>
       <nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
@@ -21,10 +35,53 @@ const Navbar = () => {
         <div className='collapse navbar-collapse' id='navbarColor01'>
           <ul className='navbar-nav m-auto'>
             <li className='nav-item active'>
-              <a className='nav-link' to='/'>
+              <Link className='nav-link' to='/'>
                 Home <span className='sr-only'>(current)</span>
-              </a>
+              </Link>
             </li>
+            {!userInfo ?(
+              <> 
+              <li className='nav-item'>
+                <Link className='nav-link' to='/login'>
+                  Login
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className='nav-link' to='/register'>
+                  Register
+                </Link>
+              </li>
+              
+              
+              </>
+            ) : (
+              <>
+                        <li className='nav-item'>
+                <Link className='nav-link' to='/crop'>
+                  Crops/Products
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link className='nav-link' to='/addcrop'>
+                  Add Crop
+                </Link>
+              </li>
+
+              <li className='nav-item'>
+                <Link className='nav-link' to='/users'>
+                  Users
+                </Link>
+              </li>
+              <li className='nav-item'>
+                <Link 
+                onClick ={logoutHandler} className='nav-link' to='/'>
+                  Logout
+                </Link>
+              </li>
+              </>
+
+
+            )}
             <li className='nav-item'>
               {/* Modal  */}
 
@@ -130,44 +187,12 @@ const Navbar = () => {
             </li>
             {/* List menu items */}
             <>
-              <li className='nav-item'>
-                <Link className='nav-link' to='/crop'>
-                  Crops/Products
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link className='nav-link' to='/addcrop'>
-                  Add Crop
-                </Link>
-              </li>
-
-              <li className='nav-item'>
-                <a className='nav-link' to='/users'>
-                  Users
-                </a>
-              </li>
-              <li className='nav-item'>
-                <a className='nav-link' to='/login'>
-                  Logout
-                </a>
-              </li>
+    
             </>
             {/* Login Register */}
-            <>
-              <li className='nav-item'>
-                <Link className='nav-link' to='/login'>
-                  Login
-                </Link>
-              </li>
-              <li className='nav-item'>
-                <Link className='nav-link' to='/register'>
-                  Register
-                </Link>
-              </li>
-            </>
 
             {/* Drop dowm */}
-            {true ? (
+            {userInfo ? (
               <li className='nav-item dropdown'>
                 <a
                   className='nav-link dropdown-toggle btn-dark'
